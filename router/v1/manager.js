@@ -1,7 +1,7 @@
 // * Third Party Libraries
 const express = require('express');
 
-// * Initiallizations
+// * initializations
 const router = express.Router();
 
 module.exports = router;
