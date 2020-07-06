@@ -8,9 +8,18 @@ require('dotenv').config()
 // * Custom file imports
 const AuthRoute = require('./router/v1/auth')
 
+
+
 // * initializations
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+// * Middleware
+
+// * Implementing morgan http logger
+// TODO: Save logs to file
+app.use(morgan('combined'))
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -19,13 +28,13 @@ app.use(bodyParser.json())
 
 // * Filtering Routes
 
-app.get('/', async(req,res,next)=>{
+app.get('/v1', async(req,res,next)=>{
     res.status(200).json({
         message: "Welcome to Good Eats"
     })
 })
 
-app.use('/auth', AuthRoute)
+app.use('/v1/auth', AuthRoute)
 
 // * General 404 error
 app.use(async(req, res, next) => {
@@ -33,7 +42,7 @@ app.use(async(req, res, next) => {
 })
 
 
-// * Main Error handler
+// * Global Error Handler
 app.use((err, req, res, next) => {
     res.status(err.status || 500).json({
         status: err.status || 500,
