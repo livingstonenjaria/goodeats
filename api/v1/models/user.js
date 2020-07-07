@@ -58,5 +58,9 @@ const UserSchema = new Schema({
     }
 })
 
-const User = mongoose.Model('User', UserSchema)
+Object.assign(UserSchema.statics,{
+    Roles
+})
+
+const User = mongoose.model('User', UserSchema)
 module.exports = User

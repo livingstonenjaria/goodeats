@@ -3,7 +3,15 @@ GET http://localhost:3000/v1/
 
 ### Register Route
 POST  http://localhost:3000/v1/auth/register
-# Content-Type: 'application/json'
+Content-Type: application/json
+
+{
+    "firstname": "LIVINGSTONE",
+    "lastname": "Wachira",
+    "email": "livingstonenjaria4@gmail.com",
+    "phone": "+97338068374",
+    "password": "12345"
+}
 
 ### Login Route
 POST  http://localhost:3000/v1/auth/login
