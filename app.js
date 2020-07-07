@@ -6,7 +6,8 @@ const createError = require('http-errors')
 require('dotenv').config()
 
 // * Custom file imports
-const AuthRoute = require('./router/v1/auth')
+require('./helpers/init_mongodb')
+const AuthRoute = require('./api/v1/router/auth')
 
 
 
