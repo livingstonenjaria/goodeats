@@ -6,6 +6,7 @@ const createError = require('http-errors')
 // * Custom File imports
 const User = require('../models/user')
 const { Roles } = require('../models/user')
+const { authSchema } = require('../../../helpers/validation_schema')
 const { Capitalize } = require('../../../helpers/filters')
 
 
@@ -14,9 +15,12 @@ const router = express.Router()
 
 router.post('/register', async(req, res, next) =>{
     try {
-        const { email, phone, password } = req.body
-        const firstname = Capitalize(req.body.firstname)
-        const lastname = Capitalize(req.body.lastname);
+        const result = await authSchema.validateAsync(req.body)
+        const { email, phone, password } = result
+        const firstname = Capitalize(result.firstname)
+        const lastname = Capitalize(result.lastname)
+
+
 
         // * Check if user exists
         const doesExist = await User.findOne({email: email})
@@ -35,6 +39,7 @@ router.post('/register', async(req, res, next) =>{
         const savedUser = await user.save()
         res.status(201).send(savedUser)
     } catch (error) {
+        if( error.isJoi === true ) error.status = 422
         next(error)
     }
 })
