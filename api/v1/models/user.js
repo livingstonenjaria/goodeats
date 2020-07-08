@@ -1,6 +1,6 @@
 // * Third party libraries
 const mongoose = require('mongoose')
-
+const bcrypt = require('bcrypt')
 // * Initializations
 const Schema = mongoose.Schema
 
@@ -18,14 +18,12 @@ const UserSchema = new Schema({
     firstname: {
         type: String,
         required: [true, 'User must provide a firstname'],
-        trim: true,
-        lowercase: true
+        trim: true
     },
     lastname: {
         type: String,
         required: [true, 'User must provide a lastname'],
-        trim: true,
-        lowercase: true
+        trim: true
     },
     phone: {
         type: String,
@@ -62,5 +60,23 @@ Object.assign(UserSchema.statics,{
     Roles
 })
 
+// * @DESC Middleware to hash password before save
+UserSchema.pre('save', async function(next){
+    try {
+        const salt = await bcrypt.genSalt(12)
+        const hashedPassword = await bcrypt.hash(this.password, salt)
+        this.password = hashedPassword
+        next()
+    } catch (error) {
+        next(error)
+    }
+})
+
 const User = mongoose.model('User', UserSchema)
+
+// * Change Stream
+// User.watch().on('change', data => {
+//     console.log(data)
+// })
+
 module.exports = User

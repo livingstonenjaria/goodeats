@@ -10,7 +10,7 @@ Content-Type: application/json
     "lastname": "Wachira",
     "email": "livingstonenjaria4@gmail.com",
     "phone": "+97338068374",
-    "password": "1234567"
+    "password": "12345678"
 }
 
 ### Login Route
