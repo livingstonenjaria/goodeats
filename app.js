@@ -7,6 +7,7 @@ require('dotenv').config()
 
 // * Custom file imports
 require('./helpers/init_mongodb')
+const { VerifyAccessToken } = require('./helpers/jwt_helpers')
 const AuthRoute = require('./api/v1/router/auth')
 
 
@@ -29,7 +30,7 @@ app.use(bodyParser.json())
 
 // * Filtering Routes
 
-app.get('/v1', async(req,res,next)=>{
+app.get('/v1', VerifyAccessToken, async(req,res,next)=>{
     res.status(200).json({
         message: "Welcome to Good Eats"
     })

@@ -1,5 +1,6 @@
 
 GET http://localhost:3000/v1/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQyOTE4NzcsImV4cCI6MTU5NDI5MTg3OCwiYXVkIjoiNWYwNmUwMjMyMGJmYzkwNTQ3MTJjZWUyIiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.XhriJ68O_5SV1X-kTeLfbK945aJzsccKW3Do1MYQvVRnketmym4pt_CJ8PzfBdbKeY9uCsrPyRsqbD8tRNs2Ug
 
 ### Register Route
 POST  http://localhost:3000/v1/auth/register
@@ -19,7 +20,7 @@ Content-Type: application/json
 
 {
     "email": "livingstonenjaria4@gmail.com",
-    "password": "1234567"
+    "password": "12345678"
 }
 
 ### Refresh Token Route
