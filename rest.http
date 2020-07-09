@@ -1,6 +1,6 @@
 
 GET http://localhost:3000/v1/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQyOTE4NzcsImV4cCI6MTU5NDI5MTg3OCwiYXVkIjoiNWYwNmUwMjMyMGJmYzkwNTQ3MTJjZWUyIiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.XhriJ68O_5SV1X-kTeLfbK945aJzsccKW3Do1MYQvVRnketmym4pt_CJ8PzfBdbKeY9uCsrPyRsqbD8tRNs2Ug
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQyOTYzMDYsImV4cCI6MTU5NDI5OTkwNiwiYXVkIjoiNWYwNmUwMjMyMGJmYzkwNTQ3MTJjZWUyIiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.yyYb5_wPj92eol8y7atJq9xFjRW8YiA-zOQEVhDGJ16rd-hI7bLfjXR4cwdvuLLaIDem4DoPTyb4O6RXMJIgLg
 
 ### Register Route
 POST  http://localhost:3000/v1/auth/register
@@ -25,7 +25,11 @@ Content-Type: application/json
 
 ### Refresh Token Route
 POST  http://localhost:3000/v1/auth/refresh-token
-# Content-Type: 'application/json'
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQyOTYyNjEsImV4cCI6MTYyNTg1Mzg2MSwiYXVkIjoiNWYwNmUwMjMyMGJmYzkwNTQ3MTJjZWUyIiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.JzLccR9uxyPBW9PQxF17DAhK-T6zVSWEzUMKZV3WFLkGkhPEtrsrDK_y9HCiok12u-urubMp1_ZiBSGOeZIi3A"
+}
 
 ### Forgot Password Route
 POST  http://localhost:3000/v1/auth/forgot-password

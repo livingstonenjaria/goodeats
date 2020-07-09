@@ -9,7 +9,7 @@ const User = require('../models/user')
 const { Roles } = require('../models/user')
 
 // * Helpers
-const { SignAccessToken } = require('../../../helpers/jwt_helpers')
+const { SignAccessToken, SignRefreshToken, VerifyRefreshToken } = require('../../../helpers/jwt_helpers')
 const {
   RegistrationValidation,
   LoginValidation
@@ -52,8 +52,10 @@ router.post("/register", RegistrationValidation, async (req, res, next) => {
 
     const savedUser = await user.save();
     const accessToken = await SignAccessToken(savedUser.id)
+    const refreshToken = await SignRefreshToken(savedUser.id)
     res.status(201).json({
-      accessToken
+      accessToken,
+      refreshToken
     });
 
   } catch (error) {
@@ -79,10 +81,12 @@ router.post('/login', LoginValidation, async(req, res, next) =>{
       const isMatch = await user.isValidPassword(password)
       if(!isMatch) throw createError.Unauthorized("Username/Password is not valid")
 
-      // *Generate token for valid user
+      // * Generate tokens for valid user
       const accessToken = await SignAccessToken(user.id)
+      const refreshToken = await SignRefreshToken(user.id)
       res.status(200).json({
-        accessToken
+        accessToken,
+        refreshToken
       });
 
     } catch (error) {
@@ -90,7 +94,20 @@ router.post('/login', LoginValidation, async(req, res, next) =>{
     }
 })
 router.post('/refresh-token', async(req, res, next) =>{
-    res.send("Refresh Token Route")
+    try {
+      const { refreshToken } = req.body
+      if(!refreshToken) throw createError.BadRequest()
+      const userId = await VerifyRefreshToken(refreshToken)
+      // * Generate tokens for valid user
+      const accessToken = await SignAccessToken(userId)
+      const refToken = await SignRefreshToken(userId)
+      res.status(200).json({
+        accessToken: accessToken,
+        refreshToken: refToken
+      });
+    } catch (error) {
+      next(error)
+    }
 })
 router.post('/forgot-password', async(req, res, next) =>{
     res.send("Forgot Password Route")
