@@ -15,7 +15,12 @@ Content-Type: application/json
 
 ### Login Route
 POST  http://localhost:3000/v1/auth/login
-# Content-Type: 'application/json'
+Content-Type: application/json
+
+{
+    "email": "livingstonenjaria4@gmail.com",
+    "password": "1234567"
+}
 
 ### Refresh Token Route
 POST  http://localhost:3000/v1/auth/refresh-token

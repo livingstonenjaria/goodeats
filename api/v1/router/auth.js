@@ -12,6 +12,7 @@ const { Roles } = require('../models/user')
 const { SignAccessToken } = require('../../../helpers/jwt_helpers')
 const {
   RegistrationValidation,
+  LoginValidation
 } = require("../../../helpers/validation_schema")
 const { Capitalize } = require("../../../helpers/filters");
 const { token } = require('morgan');
@@ -61,8 +62,32 @@ router.post("/register", RegistrationValidation, async (req, res, next) => {
 });
 
 // * Login Users
-router.post('/login', async(req, res, next) =>{
-    res.send("Login Route")
+router.post('/login', LoginValidation, async(req, res, next) =>{
+    try {
+        // * Check for validation errors
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        throw createError.UnprocessableEntity(errors.array()[0].msg);
+      }
+      const { email, password } = req.body;
+
+      // * Check if user exists
+      const user = await User.findOne({email: email})
+      if(!user) throw createError.NotFound("User is not registered")
+
+      // * Compare password
+      const isMatch = await user.isValidPassword(password)
+      if(!isMatch) throw createError.Unauthorized("Username/Password is not valid")
+
+      // *Generate token for valid user
+      const accessToken = await SignAccessToken(user.id)
+      res.status(200).json({
+        accessToken
+      });
+
+    } catch (error) {
+      next(error)
+    }
 })
 router.post('/refresh-token', async(req, res, next) =>{
     res.send("Refresh Token Route")

@@ -71,7 +71,15 @@ UserSchema.pre('save', async function(next){
         next(error)
     }
 })
-
+// * Methods
+// * @DESC: Method to check validity of password
+UserSchema.methods.isValidPassword = async function(password) {
+    try {
+        return await bcrypt.compare(password, this.password)
+    } catch (error) {
+        throw error
+    }
+}
 const User = mongoose.model('User', UserSchema)
 
 // * Change Stream

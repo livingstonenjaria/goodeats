@@ -36,5 +36,23 @@ module.exports = {
       .isEmpty()
       .withMessage("Please provide a last name.")
       .trim(),
-  ]
+  ],
+  LoginValidation: [
+    body("email")
+      .not()
+      .isEmpty()
+      .withMessage("Oops seems like you forgot to enter your email.")
+      .isEmail()
+      .withMessage("Please provide a valid email address")
+      .trim(),
+    body("password")
+      .not()
+      .isEmpty()
+      .withMessage("Oops seems like you forgot to enter your password.")
+      .isLength({ min: 8 })
+      .withMessage(
+        "Invalid Username/Password"
+      )
+      .trim(),
+  ],
 };
