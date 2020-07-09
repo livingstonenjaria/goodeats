@@ -7,10 +7,14 @@ const { validationResult } = require("express-validator");
 // * Custom File imports
 const User = require('../models/user')
 const { Roles } = require('../models/user')
+
+// * Helpers
+const { SignAccessToken } = require('../../../helpers/jwt_helpers')
 const {
   RegistrationValidation,
-} = require("../../../helpers/validation_schema");
+} = require("../../../helpers/validation_schema")
 const { Capitalize } = require("../../../helpers/filters");
+const { token } = require('morgan');
 
 
 // * initializations
@@ -46,7 +50,10 @@ router.post("/register", RegistrationValidation, async (req, res, next) => {
     });
 
     const savedUser = await user.save();
-    res.status(201).send(savedUser);
+    const accessToken = await SignAccessToken(savedUser.id)
+    res.status(201).json({
+      accessToken
+    });
 
   } catch (error) {
     next(error);
