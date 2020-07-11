@@ -1,6 +1,7 @@
 // * Third party libraries
 const mongoose = require('mongoose')
 
+
 // * @DESC initialize mongodb instance
 mongoose.connect(process.env.MONGO_URI,{
     useCreateIndex: true,
