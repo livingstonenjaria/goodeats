@@ -41,4 +41,8 @@ POST  http://localhost:5000/v1/auth/reset-password
 
 ### Logout Route
 DELETE   http://localhost:5000/v1/auth/logout
-# Content-Type: 'application/json'
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ1MDM3ODMsImV4cCI6MTYyNjA2MTM4MywiYXVkIjoiNWYwOTQzYTYxMGFiNjFkZTEwZTc3NjA1IiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.SxY0-6zP_P8JOF1LGz2cvYxzF7oc59_WNv4ucdHWd0uHYJpXdTHgvUeyA_sQ6dL3pnKg35RsV22eVxYw3Et9MQ"
+}

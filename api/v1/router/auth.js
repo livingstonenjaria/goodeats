@@ -9,6 +9,7 @@ const User = require('../models/user')
 const { Roles } = require('../models/user')
 
 // * Helpers
+const client = require("../../../helpers/init_redis")
 const { SignAccessToken, SignRefreshToken, VerifyRefreshToken } = require('../../../helpers/jwt_helpers')
 const {
   RegistrationValidation,
@@ -116,7 +117,21 @@ router.post('/reset-password', async(req, res, next) =>{
     res.send("Reset Password Route")
 })
 router.delete('/logout', async(req, res, next) =>{
-    res.send("Logout Route")
+    try {
+      const {refreshToken} = req.body
+      if (!refreshToken) throw createError.BadRequest()
+      const userId  = await VerifyRefreshToken(refreshToken)
+      client.DEL(userId, (err, val) => {
+        if(err){
+          console.log(err.message)
+          throw createError.InternalServerError()
+        }
+        console.log(val)
+        res.sendStatus(204)
+      })
+    } catch (error) {
+      next(error)
+    }
 })
 
 module.exports = router;
