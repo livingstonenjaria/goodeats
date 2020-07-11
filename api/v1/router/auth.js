@@ -50,8 +50,8 @@ router.post("/register", RegistrationValidation, async (req, res, next) => {
       date_created: Date.now(),
     });
 
-    const savedUser = await user.save();
-    const accessToken = await SignAccessToken(savedUser.id)
+    const savedUser = await user.save()
+    const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
     const refreshToken = await SignRefreshToken(savedUser.id)
     res.status(201).json({
       accessToken,

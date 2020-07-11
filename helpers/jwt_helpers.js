@@ -3,7 +3,11 @@ const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors');
-const { resolve } = require('path');
+
+// * Custom library imports
+
+const client = require('./init_redis')
+
 // * initializations
 const privateKeyPath = path.join(__dirname, "keys", "private.key");
 const privateKey = fs.readFileSync(privateKeyPath, "utf8");
@@ -15,8 +19,10 @@ const refreshPublicKeyPath = path.join(__dirname, "keys", "refresh_public.key");
 const refreshPublicKey = fs.readFileSync(refreshPublicKeyPath, "utf8");
 
 module.exports = {
-    SignAccessToken: (userId) => {
-        const payload = {}
+    SignAccessToken: (userId, role) => {
+        const payload = {
+            role
+        }
         const options = {
             expiresIn: "1h",
             issuer: "goodeats.com",
@@ -55,7 +61,8 @@ module.exports = {
         })
     },
     SignRefreshToken: (userId) => {
-        const payload = {}
+        const payload = {
+        }
         const options = {
             expiresIn: "1y",
             issuer: "goodeats.com",
@@ -68,7 +75,13 @@ module.exports = {
                     console.log(err.message)
                     return reject(createError.InternalServerError())
                 }
-                resolve(token)
+                client.SET(userId, token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
+                    if(err) {
+                        console.log(err)
+                        return reject(createError.InternalServerError())
+                    }
+                    resolve(token)
+                })
             })
         })
     },
@@ -77,7 +90,15 @@ module.exports = {
             jwt.verify(refreshToken, refreshPublicKey, (err, payload) => {
                 if(err) return reject (createError.Unauthorized())
                 const userId = payload.aud
-                resolve(userId)
+
+                client.GET(userId, (err, result) => {
+                    if(err){
+                        console.log(err)
+                        return reject(createError.InternalServerError())
+                    }
+                    if(refreshToken === result) return resolve(userId)
+                    return reject(createError.Unauthorized())
+                })
             })
         })
     }

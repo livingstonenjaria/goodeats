@@ -7,6 +7,7 @@ require('dotenv').config()
 
 // * Custom file imports
 require('./helpers/init_mongodb')
+require('./helpers/init_redis')
 const { VerifyAccessToken } = require('./helpers/jwt_helpers')
 const AuthRoute = require('./api/v1/router/auth')
 const { CheckDBConnection } = require('./helpers/connection_check')

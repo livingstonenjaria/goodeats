@@ -1,9 +1,9 @@
 
-GET http://localhost:3000/v1/
+GET http://localhost:5000/v1/
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQyOTYzMDYsImV4cCI6MTU5NDI5OTkwNiwiYXVkIjoiNWYwNmUwMjMyMGJmYzkwNTQ3MTJjZWUyIiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.yyYb5_wPj92eol8y7atJq9xFjRW8YiA-zOQEVhDGJ16rd-hI7bLfjXR4cwdvuLLaIDem4DoPTyb4O6RXMJIgLg
 
 ### Register Route
-POST  http://localhost:3000/v1/auth/register
+POST  http://localhost:5000/v1/auth/register
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Login Route
-POST  http://localhost:3000/v1/auth/login
+POST  http://localhost:5000/v1/auth/login
 Content-Type: application/json
 
 {
@@ -24,21 +24,21 @@ Content-Type: application/json
 }
 
 ### Refresh Token Route
-POST  http://localhost:3000/v1/auth/refresh-token
+POST  http://localhost:5000/v1/auth/refresh-token
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQyOTYyNjEsImV4cCI6MTYyNTg1Mzg2MSwiYXVkIjoiNWYwNmUwMjMyMGJmYzkwNTQ3MTJjZWUyIiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.JzLccR9uxyPBW9PQxF17DAhK-T6zVSWEzUMKZV3WFLkGkhPEtrsrDK_y9HCiok12u-urubMp1_ZiBSGOeZIi3A"
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ0NDQ0NTgsImV4cCI6MTYyNjAwMjA1OCwiYXVkIjoiNWYwOTQzYTYxMGFiNjFkZTEwZTc3NjA1IiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.Ku_5tQXZ_QDm94zu_g67dy44AFuP7Bq1dgskWUAz34rJjoz0_WRwVDbVE9Wi4-l5DAwKI5oyAQ-q6c59u9UgTA"
 }
 
 ### Forgot Password Route
-POST  http://localhost:3000/v1/auth/forgot-password
+POST  http://localhost:5000/v1/auth/forgot-password
 # Content-Type: 'application/json'
 
 ### Reset Password Route
-POST  http://localhost:3000/v1/auth/reset-password
+POST  http://localhost:5000/v1/auth/reset-password
 # Content-Type: 'application/json'
 
 ### Logout Route
-DELETE   http://localhost:3000/v1/auth/logout
+DELETE   http://localhost:5000/v1/auth/logout
 # Content-Type: 'application/json'
