@@ -28,7 +28,7 @@ POST  http://localhost:5000/v1/auth/refresh-token
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ0NDQ0NTgsImV4cCI6MTYyNjAwMjA1OCwiYXVkIjoiNWYwOTQzYTYxMGFiNjFkZTEwZTc3NjA1IiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.Ku_5tQXZ_QDm94zu_g67dy44AFuP7Bq1dgskWUAz34rJjoz0_WRwVDbVE9Wi4-l5DAwKI5oyAQ-q6c59u9UgTA"
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ1MDUwMzEsImV4cCI6MTYyNjA2MjYzMSwiYXVkIjoiNWYwYTM3M2Q2MTRjN2EwNzZhYzZkMzE1IiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.DkhLFltqJYE3h5HdgyiK7vsUWkm44dmklhRZaaay7BHINf1ZIe5O-GAhuqjijNREIwV5yJFncP04zQH7zMiiFg"
 }
 
 ### Forgot Password Route
@@ -44,5 +44,5 @@ DELETE   http://localhost:5000/v1/auth/logout
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ1MDM3ODMsImV4cCI6MTYyNjA2MTM4MywiYXVkIjoiNWYwOTQzYTYxMGFiNjFkZTEwZTc3NjA1IiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.SxY0-6zP_P8JOF1LGz2cvYxzF7oc59_WNv4ucdHWd0uHYJpXdTHgvUeyA_sQ6dL3pnKg35RsV22eVxYw3Et9MQ"
+    "refreshToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTQ1MDUwNzksImV4cCI6MTYyNjA2MjY3OSwiYXVkIjoiNWYwYTM3M2Q2MTRjN2EwNzZhYzZkMzE1IiwiaXNzIjoiZ29vZGVhdHMuY29tIn0.COwopQgCeBMXpawTEJdPN-c38KmYpwmippl091kuQ6T5-KI99AqNC-u8FtK2rfFu0RmymNGFt3fdFPjND4AcQg"
 }
