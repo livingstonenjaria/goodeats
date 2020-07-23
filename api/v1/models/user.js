@@ -48,10 +48,11 @@ const UserSchema = new Schema({
     enum: Object.values(Roles),
     default: Roles.CUSTOMER,
   },
-  date_created: {
+  createdAt: {
     type: Date,
+    default: Date.now,
   },
-  date_updated: {
+  updatedAt: {
     type: Date,
   },
 })
