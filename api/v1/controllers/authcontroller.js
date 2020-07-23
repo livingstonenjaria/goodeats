@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator')
 
 // * Custom File imports
 const User = require('../models/user')
+const { Roles } = require('../models/user')
 
 // * Helpers
 const client = require('../../../helpers/init_redis')
@@ -29,8 +30,8 @@ module.exports = {
       }
 
       const { email, phone, password } = req.body
-      const firstname = Capitalize(req.body.firstname)
-      const lastname = Capitalize(req.body.lastname)
+      const firstName = Capitalize(req.body.firstName)
+      const lastName = Capitalize(req.body.lastName)
 
       // * Check if user exists
       const doesExist = await User.findOne({
@@ -42,11 +43,61 @@ module.exports = {
       // * Create New User
       const user = new User({
         _id: new mongoose.Types.ObjectId(),
-        firstname: firstname,
-        lastname: lastname,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         phone: phone,
         password: password,
+        date_created: Date.now(),
+      })
+      const savedUser = await user.save()
+      console.log(savedUser.getFullName())
+      const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
+      const refreshToken = await SignRefreshToken(savedUser.id)
+      res.status(201).json({
+        success: true,
+        accessToken,
+        refreshToken,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+  // * Register Method
+  // * @desc Registers a new admin
+  // * @route /v1/auth/sa/create-admin
+  // * @access private
+  registerAdmin: async (req, res, next) => {
+    try {
+      // * Check for validation errors
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        throw createError.UnprocessableEntity(errors.array()[0].msg)
+      }
+      // * Check if admin exists
+      const adminExists = await User.adminExists()
+      if (adminExists) throw createError.Conflict('Admin already exists')
+
+      const { email, phone, password } = req.body
+      const firstName = Capitalize(req.body.firstName)
+      const lastName = Capitalize(req.body.lastName)
+
+      // * Check if user exists
+      const doesExist = await User.findOne({
+        email: email,
+      })
+      if (doesExist)
+        throw createError.Conflict(`${email} has already been registered`)
+
+      // * Create New User
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone,
+        password: password,
+        role: Roles.ADMIN,
         date_created: Date.now(),
       })
 

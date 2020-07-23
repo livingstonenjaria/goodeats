@@ -3,56 +3,54 @@ const { body } = require('express-validator')
 
 module.exports = {
   RegistrationValidation: [
-    body("email")
+    body('email')
       .not()
       .isEmpty()
-      .withMessage("Oops seems like you forgot to enter your email.")
+      .withMessage('Oops seems like you forgot to enter your email.')
       .isEmail()
-      .withMessage("Please provide a valid email address")
+      .withMessage('Please provide a valid email address')
       .trim(),
-    body("password")
+    body('password')
       .not()
       .isEmpty()
-      .withMessage("Oops seems like you forgot to enter your password.")
+      .withMessage('Oops seems like you forgot to enter your password.')
       .isLength({ min: 8 })
       .withMessage(
-        "Safety is our priority and your password is a little short, minimum is 8 characters"
+        'Safety is our priority and your password is a little short, minimum is 8 characters'
       )
       .trim(),
-    body("phone")
+    body('phone')
       .not()
       .isEmpty()
-      .withMessage("Please provide a valid phone number.")
+      .withMessage('Please provide a valid phone number.')
       .isLength({ min: 8 })
-      .withMessage("Phone number must be atleast 8 characters long")
+      .withMessage('Phone number must be at least 8 characters long')
       .trim(),
-    body("firstname")
+    body('firstName')
       .not()
       .isEmpty()
-      .withMessage("Please provide a first name.")
+      .withMessage('Please provide a first name.')
       .trim(),
-    body("lastname")
+    body('lastName')
       .not()
       .isEmpty()
-      .withMessage("Please provide a last name.")
+      .withMessage('Please provide a last name.')
       .trim(),
   ],
   LoginValidation: [
-    body("email")
+    body('email')
       .not()
       .isEmpty()
-      .withMessage("Oops seems like you forgot to enter your email.")
+      .withMessage('Oops seems like you forgot to enter your email.')
       .isEmail()
-      .withMessage("Please provide a valid email address")
+      .withMessage('Please provide a valid email address')
       .trim(),
-    body("password")
+    body('password')
       .not()
       .isEmpty()
-      .withMessage("Oops seems like you forgot to enter your password.")
+      .withMessage('Oops seems like you forgot to enter your password.')
       .isLength({ min: 8 })
-      .withMessage(
-        "Invalid Username/Password"
-      )
+      .withMessage('Invalid Username/Password')
       .trim(),
   ],
-};
+}

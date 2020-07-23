@@ -4,6 +4,7 @@ const express = require('express')
 // * Custom File imports
 const {
   register,
+  registerAdmin,
   login,
   refreshToken,
   logout,
@@ -20,6 +21,8 @@ const router = express.Router()
 
 // * Register New User
 router.post('/register', RegistrationValidation, register)
+// * Register New Admin
+router.post('/sa/create-admin', RegistrationValidation, registerAdmin)
 
 // * Login Users
 router.post('/login', LoginValidation, login)
