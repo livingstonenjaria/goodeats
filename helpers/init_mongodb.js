@@ -13,7 +13,7 @@ mongoose
   .then(() => {
     console.log('MongoDB connected.'.yellow)
   })
-  .catch(err => {
+  .catch((err) => {
     console.log('Mongoose connection error: ', err)
   })
 
@@ -23,7 +23,7 @@ mongoose.connection.on('connected', () => {
 })
 
 // * Check mongoose connection error
-mongoose.connection.on('error', err => {
+mongoose.connection.on('error', (err) => {
   console.log('Mongoose db connection error: ', err)
 })
 
