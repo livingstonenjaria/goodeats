@@ -61,7 +61,6 @@ module.exports = {
         }
       }
       req.payload = payload
-      console.log(payload)
       next()
     })
   },
