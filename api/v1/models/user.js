@@ -40,6 +40,7 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, 'User must provide a password'],
+    minlength: [8, 'Password cannot be less than 8 characters'],
     trim: true,
   },
   role: {
@@ -47,10 +48,11 @@ const UserSchema = new Schema({
     enum: Object.values(Roles),
     default: Roles.CUSTOMER,
   },
-  date_created: {
+  createdAt: {
     type: Date,
+    default: Date.now,
   },
-  date_updated: {
+  updatedAt: {
     type: Date,
   },
 })

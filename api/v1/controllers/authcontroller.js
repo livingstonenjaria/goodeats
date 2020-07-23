@@ -48,7 +48,7 @@ module.exports = {
         email: email,
         phone: phone,
         password: password,
-        date_created: Date.now(),
+        createdAt: Date.now(),
       })
       const savedUser = await user.save()
       console.log(savedUser.getFullName())
@@ -98,7 +98,7 @@ module.exports = {
         phone: phone,
         password: password,
         role: Roles.ADMIN,
-        date_created: Date.now(),
+        createdAt: Date.now(),
       })
 
       const savedUser = await user.save()
