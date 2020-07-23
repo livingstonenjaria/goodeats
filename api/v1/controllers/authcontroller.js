@@ -17,6 +17,9 @@ const { Capitalize } = require('../../../helpers/filters')
 
 module.exports = {
   // * Register Method
+  // * @desc Registers a new user
+  // * @route /v1/auth/register
+  // * @access private
   register: async (req, res, next) => {
     try {
       // * Check for validation errors
@@ -51,6 +54,7 @@ module.exports = {
       const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
       const refreshToken = await SignRefreshToken(savedUser.id)
       res.status(201).json({
+        success: true,
         accessToken,
         refreshToken,
       })
@@ -59,6 +63,9 @@ module.exports = {
     }
   },
   // * Login Method
+  // * @desc Logs in a user
+  // * @route /v1/auth/login
+  // * @access private
   login: async (req, res, next) => {
     try {
       // * Check for validation errors
@@ -83,6 +90,7 @@ module.exports = {
       const accessToken = await SignAccessToken(user.id)
       const refreshToken = await SignRefreshToken(user.id)
       res.status(200).json({
+        success: true,
         accessToken,
         refreshToken,
       })
@@ -91,6 +99,9 @@ module.exports = {
     }
   },
   // * Refresh Token Method
+  // * @desc refresh user token
+  // * @route /v1/auth/refresh-token
+  // * @access private
   refreshToken: async (req, res, next) => {
     try {
       const { refreshToken } = req.body
@@ -100,6 +111,7 @@ module.exports = {
       const accessToken = await SignAccessToken(userId)
       const refToken = await SignRefreshToken(userId)
       res.status(200).json({
+        success: true,
         accessToken: accessToken,
         refreshToken: refToken,
       })
@@ -108,6 +120,9 @@ module.exports = {
     }
   },
   // * Logout Method
+  // * @desc logout user
+  // * @route /v1/auth/logout
+  // * @access private
   logout: async (req, res, next) => {
     try {
       const { refreshToken } = req.body
@@ -119,7 +134,10 @@ module.exports = {
           throw createError.InternalServerError()
         }
         console.log(val)
-        res.sendStatus(204)
+        res.status(200).json({
+          success: true,
+          message: 'Logout Successful',
+        })
       })
     } catch (error) {
       next(error)
