@@ -15,7 +15,7 @@ client.on('connect', () => {
 client.on('ready', () => {
   console.log('Client connected to redis and ready to use'.green)
 })
-client.on('error', err => {
+client.on('error', (err) => {
   console.log('Redis Error', err)
 })
 client.on('end', () => {

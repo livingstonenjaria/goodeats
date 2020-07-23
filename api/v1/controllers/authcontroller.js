@@ -51,7 +51,6 @@ module.exports = {
         createdAt: Date.now(),
       })
       const savedUser = await user.save()
-      console.log(savedUser.getFullName())
       const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
       const refreshToken = await SignRefreshToken(savedUser.id)
       res.status(201).json({
@@ -138,7 +137,7 @@ module.exports = {
         throw createError.Unauthorized('Username/Password is not valid')
 
       // * Generate tokens for valid user
-      const accessToken = await SignAccessToken(user.id)
+      const accessToken = await SignAccessToken(user.id, user.role)
       const refreshToken = await SignRefreshToken(user.id)
       res.status(200).json({
         success: true,

@@ -19,23 +19,11 @@ module.exports = {
         'Safety is our priority and your password is a little short, minimum is 8 characters'
       )
       .trim(),
-    body('phone')
-      .not()
-      .isEmpty()
-      .withMessage('Please provide a valid phone number.')
-      .isLength({ min: 8 })
-      .withMessage('Phone number must be at least 8 characters long')
-      .trim(),
     body('firstName')
       .not()
       .isEmpty()
-      .withMessage('Please provide a first name.')
-      .trim(),
-    body('lastName')
-      .not()
-      .isEmpty()
-      .withMessage('Please provide a last name.')
-      .trim(),
+      .withMessage('Please provide a first name.'),
+    body('lastName').not().isEmpty().withMessage('Please provide a last name.'),
   ],
   LoginValidation: [
     body('email')
