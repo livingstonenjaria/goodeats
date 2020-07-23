@@ -9,9 +9,15 @@ const CountrySchema = new Schema({
     required: [true, 'The name of the country has to be provided'],
     maxlength: [60, 'The country name provided is too long'],
   },
-  countryCode: {
+  code: {
     type: String,
     required: [true, 'Country code is required'],
+    maxlength: [2, 'Country code should be only 2 characters long'],
+    minlength: [2, 'Country code should be 2 characters long'],
+  },
+  dialCode: {
+    type: String,
+    required: [true, 'Please provide a dial code'],
   },
   createdBy: {
     type: Schema.Types.ObjectId,

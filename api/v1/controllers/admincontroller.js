@@ -8,5 +8,10 @@ const { validationResult } = require('express-validator')
 const Country = require('../models/country')
 
 module.exports = {
-  addCountry: async (req, res, next) => {},
+  // * desc: Add country of operation
+  // * route: Add country of operation
+  // * access: Private
+  addCountry: async (req, res, next) => {
+    console.log(req.body)
+  },
 }

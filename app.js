@@ -8,9 +8,12 @@ require('dotenv').config()
 // * Custom file imports
 require('./helpers/init_mongodb')
 require('./helpers/init_redis')
-const { VerifyAccessToken } = require('./helpers/jwt_helpers')
-const AuthRoute = require('./api/v1/router/auth')
+
 const { CheckDBConnection } = require('./helpers/connection_check')
+const { VerifyAccessToken } = require('./helpers/jwt_helpers')
+
+const AuthRoute = require('./api/v1/router/auth')
+const AdminRoute = require('./api/v1/router/admin')
 
 // * initializations
 const app = express()
@@ -33,6 +36,7 @@ app.get('/v1', VerifyAccessToken, async (req, res, next) => {
 })
 
 app.use('/v1/auth', CheckDBConnection, AuthRoute)
+app.use('/v1/admin', CheckDBConnection, AdminRoute)
 
 // * General 404 error
 app.use(async (req, res, next) => {

@@ -53,4 +53,25 @@ module.exports = {
       .withMessage('Invalid Username/Password')
       .trim(),
   ],
+  CountryValidation: [
+    body('countryName')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a country name.')
+      .isLength({ max: 60 })
+      .withMessage('The country name provided is too long')
+      .trim(),
+    body('code')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a country code.')
+      .isLength({ min: 2, max: 2 })
+      .withMessage('Country code should be 2 characters long')
+      .trim(),
+    body('dialCode')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a dial code.')
+      .trim(),
+  ],
 }
