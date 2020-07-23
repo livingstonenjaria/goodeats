@@ -51,7 +51,6 @@ module.exports = {
         createdAt: Date.now(),
       })
       const savedUser = await user.save()
-      console.log(savedUser.getFullName())
       const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
       const refreshToken = await SignRefreshToken(savedUser.id)
       res.status(201).json({
