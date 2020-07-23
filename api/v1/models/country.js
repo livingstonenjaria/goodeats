@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const CountrySchema = new Schema({
   _id: Schema.Types.ObjectId,
-  name: {
+  countryName: {
     type: String,
     required: [true, 'The name of the country has to be provided'],
     maxlength: [60, 'The country name provided is too long'],
@@ -14,6 +14,7 @@ const CountrySchema = new Schema({
     required: [true, 'Country code is required'],
     maxlength: [2, 'Country code should be only 2 characters long'],
     minlength: [2, 'Country code should be 2 characters long'],
+    uppercase: true,
   },
   dialCode: {
     type: String,
