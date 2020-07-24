@@ -23,7 +23,6 @@ module.exports = {
       if (!errors.isEmpty()) {
         throw createError.UnprocessableEntity(errors.array()[0].msg)
       }
-      console.log(countries.getNumericCodes())
       const countryName = Capitalize(req.body.countryName)
       let code = _.upperCase(req.body.code)
       const { dialCode } = req.body
