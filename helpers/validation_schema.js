@@ -62,4 +62,19 @@ module.exports = {
       .withMessage('Please provide a dial code.')
       .trim(),
   ],
+  PhoneValidation: [
+    body('phone').not().isEmpty().withMessage('Please provide a phone number.'),
+    body('code')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a country code.')
+      .isLength({ min: 2, max: 2 })
+      .withMessage('Country code should be 2 characters long')
+      .trim(),
+    body('dialCode')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a dial code.')
+      .trim(),
+  ],
 }

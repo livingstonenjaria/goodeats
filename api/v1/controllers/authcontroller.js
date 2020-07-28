@@ -1,12 +1,12 @@
 // * Third Party Libraries
 const mongoose = require('mongoose')
 const createError = require('http-errors')
+const _ = require('lodash')
 const { validationResult } = require('express-validator')
 
 // * Custom File imports
 const User = require('../models/user')
 const { Roles } = require('../models/user')
-
 // * Helpers
 const client = require('../../../helpers/init_redis')
 const {
@@ -29,7 +29,7 @@ module.exports = {
         throw createError.UnprocessableEntity(errors.array()[0].msg)
       }
 
-      const { email, phone, password } = req.body
+      const { email, phone, password, countyCode } = req.body
       const firstName = Capitalize(req.body.firstName)
       const lastName = Capitalize(req.body.lastName)
 
@@ -74,8 +74,8 @@ module.exports = {
         throw createError.UnprocessableEntity(errors.array()[0].msg)
       }
       // * Check if admin exists
-      const adminExists = await User.adminExists()
-      if (adminExists) throw createError.Conflict('Admin already exists')
+      const doesAdminExist = await User.adminExists()
+      if (doesAdminExist) throw createError.Conflict('Admin already exists')
 
       const { email, phone, password } = req.body
       const firstName = Capitalize(req.body.firstName)
@@ -180,10 +180,9 @@ module.exports = {
       const userId = await VerifyRefreshToken(refreshToken)
       client.DEL(userId, (err, val) => {
         if (err) {
-          console.log(err.message)
+          console.error(err.message)
           throw createError.InternalServerError()
         }
-        console.log(val)
         res.status(200).json({
           success: true,
           message: 'Logout Successful',

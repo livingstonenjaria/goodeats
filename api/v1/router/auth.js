@@ -9,16 +9,19 @@ const {
   refreshToken,
   logout,
 } = require('../controllers/authcontroller')
-
+const { registerPhone } = require('../controllers/phonecontroller')
 // * Helpers
 const {
   RegistrationValidation,
   LoginValidation,
+  PhoneValidation,
 } = require('../../../helpers/validation_schema')
 
 // * initializations
 const router = express.Router()
 
+// * Register New User Phone
+router.post('/register-phone', PhoneValidation, registerPhone)
 // * Register New User
 router.post('/register', RegistrationValidation, register)
 // * Register New Admin

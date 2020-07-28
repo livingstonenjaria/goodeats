@@ -48,6 +48,10 @@ const UserSchema = new Schema({
     enum: Object.values(Roles),
     default: Roles.CUSTOMER,
   },
+  country: {
+    type: Schema.Types.ObjectId,
+    ref: 'Country',
+  },
   createdAt: {
     type: Date,
     default: Date.now,

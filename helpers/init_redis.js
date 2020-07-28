@@ -15,11 +15,11 @@ client.on('connect', () => {
 client.on('ready', () => {
   console.log('Client connected to redis and ready to use'.green)
 })
-client.on('error', (err) => {
-  console.log('Redis Error', err)
+client.on('error', err => {
+  console.error('Redis Error', err)
 })
 client.on('end', () => {
-  console.log('Client disconnected from redis..'.red)
+  console.error('Client disconnected from redis..'.red)
 })
 process.on('SIGINT', () => {
   client.quit()
