@@ -36,7 +36,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       jwt.sign(payload, privateKey, options, (err, token) => {
         if (err) {
-          console.log(err.message)
+          console.error(err.message)
           return reject(createError.InternalServerError())
         }
         resolve(token)
@@ -53,7 +53,7 @@ module.exports = {
     // * Verify the access token
     jwt.verify(token, publicKey, (err, payload) => {
       if (err) {
-        console.log(err.message)
+        console.error(err.message)
         if (err.name === 'JsonWebTokenError') {
           return next(createError.Unauthorized())
         } else {
@@ -75,12 +75,12 @@ module.exports = {
     return new Promise((resolve, reject) => {
       jwt.sign(payload, refreshPrivateKey, options, (err, token) => {
         if (err) {
-          console.log(err.message)
+          console.error(err.message)
           return reject(createError.InternalServerError())
         }
         client.SET(userId, token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
           if (err) {
-            console.log(err)
+            console.error(err)
             return reject(createError.InternalServerError())
           }
           resolve(token)
@@ -96,7 +96,7 @@ module.exports = {
 
         client.GET(userId, (err, result) => {
           if (err) {
-            console.log(err)
+            console.error(err)
             return reject(createError.InternalServerError())
           }
           if (refreshToken === result) return resolve(userId)

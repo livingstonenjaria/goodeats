@@ -9,12 +9,17 @@ const {
   refreshToken,
   logout,
 } = require('../controllers/authcontroller')
-const { registerPhone } = require('../controllers/phonecontroller')
+const {
+  registerPhone,
+  verifyPhone,
+  resendOTP,
+} = require('../controllers/phonecontroller')
 // * Helpers
 const {
   RegistrationValidation,
   LoginValidation,
   PhoneValidation,
+  VerificationValidation,
 } = require('../../../helpers/validation_schema')
 
 // * initializations
@@ -22,6 +27,10 @@ const router = express.Router()
 
 // * Register New User Phone
 router.post('/register-phone', PhoneValidation, registerPhone)
+// * Verify OTP-Code
+router.post('/verify-otp-code', VerificationValidation, verifyPhone)
+// * Resend OTP-Code
+router.post('/resend-otp-code', PhoneValidation, resendOTP)
 // * Register New User
 router.post('/register', RegistrationValidation, register)
 // * Register New Admin

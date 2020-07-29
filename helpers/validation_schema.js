@@ -77,4 +77,21 @@ module.exports = {
       .withMessage('Please provide a dial code.')
       .trim(),
   ],
+  VerificationValidation: [
+    body('phone').not().isEmpty().withMessage('Please provide a phone number.'),
+    body('code')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a country code.')
+      .isLength({ min: 2, max: 2 })
+      .withMessage('Country code should be 2 characters long')
+      .trim(),
+    body('otp_token')
+      .not()
+      .isEmpty()
+      .withMessage('Please provide a verification code.')
+      .isLength({ min: 6, max: 6 })
+      .withMessage('Verification code should be 6 characters long')
+      .trim(),
+  ],
 }
