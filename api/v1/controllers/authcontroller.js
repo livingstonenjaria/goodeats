@@ -6,6 +6,7 @@ const { validationResult } = require('express-validator')
 
 // * Custom File imports
 const User = require('../models/user')
+const Phone = require('../models/phone')
 const { Roles } = require('../models/user')
 // * Helpers
 const client = require('../../../helpers/init_redis')
@@ -15,6 +16,7 @@ const {
   VerifyRefreshToken,
 } = require('../../../helpers/jwt_helpers')
 const { Capitalize } = require('../../../helpers/filters')
+const { SanitizePhone } = require('../../../helpers/phone_helper')
 
 module.exports = {
   // * Register Method
@@ -29,9 +31,25 @@ module.exports = {
         throw createError.UnprocessableEntity(errors.array()[0].msg)
       }
 
-      const { email, phone, password, countyCode } = req.body
+      const { email, phone, password, countryCode } = req.body
       const firstName = Capitalize(req.body.firstName)
       const lastName = Capitalize(req.body.lastName)
+      const code = _.upperCase(countryCode)
+      // * Sanitize Phone Number
+      const sanitizedPhone = SanitizePhone(phone, code)
+      const phoneExists = await Phone.findOne({ phone: sanitizedPhone })
+      if (!phoneExists) {
+        throw createError.BadRequest(
+          'Please register a phone number first then continue with registration'
+        )
+      }
+      // * @desc check if phone is verified
+      const isVerified = phoneExists.isVerified()
+      // ? if verified throw conflict error
+      if (!isVerified)
+        throw createError.Conflict(
+          'Please verify your phone number first before continuing with registration'
+        )
 
       // * Check if user exists
       const doesExist = await User.findOne({
@@ -46,7 +64,7 @@ module.exports = {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        phone: phone,
+        phone: phoneExists._id,
         password: password,
         createdAt: Date.now(),
       })
@@ -73,13 +91,30 @@ module.exports = {
       if (!errors.isEmpty()) {
         throw createError.UnprocessableEntity(errors.array()[0].msg)
       }
+
       // * Check if admin exists
       const doesAdminExist = await User.adminExists()
       if (doesAdminExist) throw createError.Conflict('Admin already exists')
 
-      const { email, phone, password } = req.body
+      const { email, phone, password, countryCode } = req.body
       const firstName = Capitalize(req.body.firstName)
       const lastName = Capitalize(req.body.lastName)
+      const code = _.upperCase(countryCode)
+      // * Sanitize Phone Number
+      const sanitizedPhone = SanitizePhone(phone, code)
+      const phoneExists = await Phone.findOne({ phone: sanitizedPhone })
+      if (!phoneExists) {
+        throw createError.BadRequest(
+          'Please register a phone number first then continue with registration'
+        )
+      }
+      // * @desc check if phone is verified
+      const isVerified = phoneExists.isVerified()
+      // ? if verified throw conflict error
+      if (!isVerified)
+        throw createError.Conflict(
+          'Please verify your phone number first before continuing with registration'
+        )
 
       // * Check if user exists
       const doesExist = await User.findOne({
@@ -94,7 +129,7 @@ module.exports = {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        phone: phone,
+        phone: phoneExists._id,
         password: password,
         role: Roles.ADMIN,
         createdAt: Date.now(),
