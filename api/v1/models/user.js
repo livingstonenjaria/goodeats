@@ -26,9 +26,8 @@ const UserSchema = new Schema({
     trim: true,
   },
   phone: {
-    type: String,
-    required: [true, 'User must provide a phone number'],
-    trim: true,
+    type: Schema.Types.ObjectId,
+    ref: 'Phone',
   },
   email: {
     type: String,
@@ -49,10 +48,6 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.values(Roles),
     default: Roles.CUSTOMER,
-  },
-  country: {
-    type: Schema.Types.ObjectId,
-    ref: 'Country',
   },
   createdAt: {
     type: Date,

@@ -8,6 +8,7 @@ const { validationResult } = require('express-validator')
 // * Async Handlers import
 const asyncHandler = require('../middleware/async')
 const User = require('../models/user')
+const Phone = require('../models/phone')
 const { Roles } = require('../models/user')
 // * Helpers
 const client = require('../../../helpers/init_redis')
@@ -17,6 +18,7 @@ const {
   VerifyRefreshToken,
 } = require('../../../helpers/jwt_helpers')
 const { Capitalize } = require('../../../helpers/filters')
+const { SanitizePhone } = require('../../../helpers/phone_helper')
 
 module.exports = {
   // * Register Method
@@ -30,9 +32,25 @@ module.exports = {
       throw createError.UnprocessableEntity(errors.array()[0].msg)
     }
 
-    const { email, phone, password, countyCode } = req.body
-    const firstName = Capitalize(req.body.firstName)
-    const lastName = Capitalize(req.body.lastName)
+      const { email, phone, password, countryCode } = req.body
+      const firstName = Capitalize(req.body.firstName)
+      const lastName = Capitalize(req.body.lastName)
+      const code = _.upperCase(countryCode)
+      // * Sanitize Phone Number
+      const sanitizedPhone = SanitizePhone(phone, code)
+      const phoneExists = await Phone.findOne({ phone: sanitizedPhone })
+      if (!phoneExists) {
+        throw createError.BadRequest(
+          'Please register a phone number first then continue with registration'
+        )
+      }
+      // * @desc check if phone is verified
+      const isVerified = phoneExists.isVerified()
+      // ? if verified throw conflict error
+      if (!isVerified)
+        throw createError.Conflict(
+          'Please verify your phone number first before continuing with registration'
+        )
 
     // * Check if user exists
     const doesExist = await User.findOne({
@@ -41,42 +59,63 @@ module.exports = {
     if (doesExist)
       throw createError.Conflict(`${email} has already been registered`)
 
-    // * Create New User
-    const user = new User({
-      _id: new mongoose.Types.ObjectId(),
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      password: password,
-      createdAt: Date.now(),
-    })
-    const savedUser = await user.save()
-    const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
-    const refreshToken = await SignRefreshToken(savedUser.id)
-    res.status(201).json({
-      success: true,
-      accessToken,
-      refreshToken,
-    })
-  }),
+      // * Create New User
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phoneExists._id,
+        password: password,
+        createdAt: Date.now(),
+      })
+      const savedUser = await user.save()
+      const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
+      const refreshToken = await SignRefreshToken(savedUser.id)
+      res.status(201).json({
+        success: true,
+        accessToken,
+        refreshToken,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
   // * Register Method
   // * @desc Registers a new admin
   // * @route /v1/auth/sa/create-admin
   // * @access private
-  registerAdmin: asyncHandler(async (req, res, next) => {
-    // * Check for validation errors
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      throw createError.UnprocessableEntity(errors.array()[0].msg)
-    }
-    // * Check if admin exists
-    const doesAdminExist = await User.adminExists()
-    if (doesAdminExist) throw createError.Conflict('Admin already exists')
+  registerAdmin: async (req, res, next) => {
+    try {
+      // * Check for validation errors
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        throw createError.UnprocessableEntity(errors.array()[0].msg)
+      }
 
-    const { email, phone, password } = req.body
-    const firstName = Capitalize(req.body.firstName)
-    const lastName = Capitalize(req.body.lastName)
+      // * Check if admin exists
+      const doesAdminExist = await User.adminExists()
+      if (doesAdminExist) throw createError.Conflict('Admin already exists')
+
+      const { email, phone, password, countryCode } = req.body
+      const firstName = Capitalize(req.body.firstName)
+      const lastName = Capitalize(req.body.lastName)
+      const code = _.upperCase(countryCode)
+      // * Sanitize Phone Number
+      const sanitizedPhone = SanitizePhone(phone, code)
+      const phoneExists = await Phone.findOne({ phone: sanitizedPhone })
+      if (!phoneExists) {
+        throw createError.BadRequest(
+          'Please register a phone number first then continue with registration'
+        )
+      }
+      // * @desc check if phone is verified
+      const isVerified = phoneExists.isVerified()
+      // ? if verified throw conflict error
+      if (!isVerified)
+        throw createError.Conflict(
+          'Please verify your phone number first before continuing with registration'
+        )
 
     // * Check if user exists
     const doesExist = await User.findOne({
@@ -85,17 +124,17 @@ module.exports = {
     if (doesExist)
       throw createError.Conflict(`${email} has already been registered`)
 
-    // * Create New User
-    const user = new User({
-      _id: new mongoose.Types.ObjectId(),
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      password: password,
-      role: Roles.ADMIN,
-      createdAt: Date.now(),
-    })
+      // * Create New User
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phoneExists._id,
+        password: password,
+        role: Roles.ADMIN,
+        createdAt: Date.now(),
+      })
 
     const savedUser = await user.save()
     const accessToken = await SignAccessToken(savedUser.id, savedUser.role)
