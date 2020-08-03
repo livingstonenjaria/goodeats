@@ -1,11 +1,13 @@
 // * Third Party Libraries
 const express = require('express')
 const morgan = require('morgan')
-const createError = require('http-errors')
 const colors = require('colors')
 require('dotenv').config()
 
 // * Custom file imports
+// * Async Handlers import
+const asyncHandler = require('./api/v1/middleware/async')
+const { ErrorHandler, Custom404Error } = require('./api/v1/middleware/error')
 require('./helpers/init_mongodb')
 require('./helpers/init_redis')
 
@@ -28,29 +30,28 @@ app.use(morgan('combined'))
 // * Body Parser
 app.use(express.json())
 
-// * Filtering Routes
-app.get('/v1', VerifyAccessToken, async (req, res, next) => {
-  res.status(200).json({
-    message: 'Welcome to Good Eats',
-  })
-})
-
+// * Registration and login Routes
 app.use('/v1/auth', CheckDBConnection, AuthRoute)
+
+// * Auth Middleware
+app.use(VerifyAccessToken)
+
+// * Filtering Routes
+app.get(
+  '/v1',
+  asyncHandler(async (req, res, next) => {
+    res.status(200).json({
+      message: 'Welcome to Good Eats',
+    })
+  })
+)
 app.use('/v1/admin', CheckDBConnection, AdminRoute)
 
 // * General 404 error
-app.use(async (req, res, next) => {
-  next(createError.NotFound('Sorry that route does not exist'))
-})
+app.use(Custom404Error)
 
 // * Global Error Handler
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    success: false,
-    status: err.status || 500,
-    message: err.message,
-  })
-})
+app.use(ErrorHandler)
 
 app.listen(PORT, () =>
   console.log(`Server listening on port ${PORT}`.blue.underline)

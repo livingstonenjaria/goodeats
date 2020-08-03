@@ -1,6 +1,7 @@
 // * Third party libraries
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const slugify = require('slugify')
 // * Initializations
 const Schema = mongoose.Schema
 
@@ -37,6 +38,7 @@ const UserSchema = new Schema({
     lowercase: true,
     match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
   },
+  slug: String,
   password: {
     type: String,
     required: [true, 'User must provide a password'],
@@ -71,6 +73,9 @@ UserSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(this.password, salt)
     this.password = hashedPassword
+    // * Generate user slug
+    const fullName = this.firstName + ' ' + this.lastName
+    this.slug = slugify(fullName, { lower: true })
     next()
   } catch (error) {
     next(error)
