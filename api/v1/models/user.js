@@ -68,13 +68,17 @@ UserSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(this.password, salt)
     this.password = hashedPassword
-    // * Generate user slug
-    const fullName = this.firstName + ' ' + this.lastName
-    this.slug = slugify(fullName, { lower: true })
     next()
   } catch (error) {
     next(error)
   }
+})
+// * @DESC Middleware to generate slug
+UserSchema.pre('save', function (next) {
+  // * Generate user slug
+  const fullName = this.firstName + ' ' + this.lastName
+  this.slug = slugify(fullName, { lower: true })
+  next()
 })
 // * Methods
 // * @DESC: Method to check validity of password

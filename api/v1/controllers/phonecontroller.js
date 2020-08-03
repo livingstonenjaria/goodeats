@@ -51,22 +51,18 @@ module.exports = {
         'Sorry GoodEats does not operate in your country'
       )
 
-      // * Step 2
-      // * Sanitize Phone Number
-      const sanitizedPhone = SanitizePhone(phone, code)
-      const completePhone = countryExists.dialCode + sanitizedPhone
-      // * Step 3
-      // * Check if phone already exists
-      const phoneExists = await Phone.findOne({ phone: sanitizedPhone })
-      if (phoneExists) {
-        // * @desc check if phone is verified
-        const isVerified = phoneExists.isVerified()
-        // ? if verified throw conflict error
-        if (isVerified)
-          throw createError.Conflict(
-            'The phone number you provided is already registered'
-          )
-        // ? if not verified notify user to verify
+    // * Step 2
+    // * Sanitize Phone Number
+    const sanitizedPhone = SanitizePhone(phone, code)
+    const completePhone = countryExists.dialCode + sanitizedPhone
+    // * Step 3
+    // * Check if phone already exists
+    const phoneExists = await Phone.findOne({ phone: sanitizedPhone })
+    if (phoneExists) {
+      // * @desc check if phone is verified
+      const isVerified = phoneExists.isVerified()
+      // ? if verified throw conflict error
+      if (isVerified)
         throw createError.Conflict(
           'The phone number you provided is already registered'
         )
@@ -74,49 +70,15 @@ module.exports = {
       throw createError.Conflict(
         'The phone number is not verified, please verify to continue'
       )
+    }
 
-      // * Step 8
-      // * Send otp via sms
-      // * TODO: Implement sms for production
-      // const from = 'Vonage APIs'
-      // const to = completePhone
-      // const text = `Your GoodEats verification code is ${token}`
-
-      // Nexmo response
-      // Go through response to implement better logging
-      // {
-      //   'message-count': '1',
-      //     messages: [
-      //       {
-      //         to: '97338068374',
-      //         'message-id': '15000000FDCEADB1',
-      //         status: '0',
-      //         'remaining-balance': '1.98020000',
-      //         'message-price': '0.01980000',
-      //         network: '42601'
-      //       }
-      //     ]
-      // }
-
-      // nexmo.message.sendSms(from, to, text, (err, responseData) => {
-      //   if (err) {
-      //     console.log(err)
-      //   } else {
-      //     console.dir(responseData)
-      //     // if (responseData.messages[0]['status'] === "0") {
-      //     //   console.log("Message sent successfully.");
-      //     // } else {
-      //     //   console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
-      //     // }
-      //   }
-      // })
-      // TODO: Implement after successfull message delivery
-      res.status(201).json({
-        success: true,
-        otp_token: token,
-      })
-    } catch (error) {
-      next(error)
+    // * Step 4
+    // * Generate OTP token
+    const token = GeneratePhoneOTP()
+    if (!token) {
+      throw createError.InternalServerError(
+        'We are currently experiencing some difficulties please try again later'
+      )
     }
 
     // * Step 5
@@ -140,10 +102,43 @@ module.exports = {
       sanitizedPhone,
       token
     )
+
     // * Step 8
     // * Send otp via sms
-    // * TODO: Implement sms
+    // * TODO: Implement sms for production
+    // const from = 'Vonage APIs'
+    // const to = completePhone
+    // const text = `Your GoodEats verification code is ${token}`
 
+    // Nexmo response
+    // Go through response to implement better logging
+    // {
+    //   'message-count': '1',
+    //     messages: [
+    //       {
+    //         to: '97338068374',
+    //         'message-id': '15000000FDCEADB1',
+    //         status: '0',
+    //         'remaining-balance': '1.98020000',
+    //         'message-price': '0.01980000',
+    //         network: '42601'
+    //       }
+    //     ]
+    // }
+
+    // nexmo.message.sendSms(from, to, text, (err, responseData) => {
+    //   if (err) {
+    //     console.log(err)
+    //   } else {
+    //     console.dir(responseData)
+    //     // if (responseData.messages[0]['status'] === "0") {
+    //     //   console.log("Message sent successfully.");
+    //     // } else {
+    //     //   console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
+    //     // }
+    //   }
+    // })
+    // TODO: Implement after successfull message delivery
     res.status(201).json({
       success: true,
       otp_token: token,
@@ -304,7 +299,7 @@ const setPhoneVerificationCode = (sanitizedPhone, token) => {
     })
   })
 }
-const getPhoneVerificationCode = sanitizedPhone => {
+const getPhoneVerificationCode = (sanitizedPhone) => {
   return new Promise((resolve, reject) => {
     client.GET(sanitizedPhone, (err, result) => {
       if (err) {
