@@ -54,5 +54,5 @@ app.use(Custom404Error)
 app.use(ErrorHandler)
 
 app.listen(PORT, () =>
-  console.log(`Server listening on port ${PORT}`.blue.underline)
+  console.log(`Server listening on port ${PORT}`.blue.inverse)
 )
