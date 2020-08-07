@@ -54,7 +54,7 @@ module.exports = {
 
     // * Check if user exists
     const doesExist = await User.findOne({
-      email: email,
+      email,
     })
     if (doesExist)
       throw createError.Conflict(`${email} has already been registered`)
@@ -115,7 +115,7 @@ module.exports = {
 
     // * Check if user exists
     const doesExist = await User.findOne({
-      email: email,
+      email,
     })
     if (doesExist)
       throw createError.Conflict(`${email} has already been registered`)
@@ -155,8 +155,8 @@ module.exports = {
 
     // * Check if user exists
     const user = await User.findOne({
-      email: email,
-    })
+      email,
+    }).select('+password')
     if (!user) throw createError.NotFound('User is not registered')
 
     // * Compare password

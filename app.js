@@ -1,6 +1,7 @@
 // * Third Party Libraries
 const express = require('express')
 const morgan = require('morgan')
+const cookieParser = require('cookie-parser')
 const colors = require('colors')
 require('dotenv').config()
 
@@ -29,6 +30,9 @@ app.use(morgan('combined'))
 
 // * Body Parser
 app.use(express.json())
+
+// * Cookie Parser
+app.use(cookieParser())
 
 // * Registration and login Routes
 app.use('/v1/auth', CheckDBConnection, AuthRoute)
